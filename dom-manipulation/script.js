@@ -41,3 +41,4 @@ function addQuote() {
 
 // Attach event listener to the "Show New Quote" button
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+createAddQuoteForm();
