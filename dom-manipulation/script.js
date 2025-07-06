@@ -129,12 +129,14 @@ document.getElementById("newQuote").addEventListener("click", () => {
     selected === "all" ? quotes : quotes.filter((q) => q.category === selected);
   showRandomQuote(filtered);
 });
-async function syncWithServer() {
+async function fetchQuotesFromServer() {
+  const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+
   try {
     const response = await fetch(SERVER_URL);
     const serverData = await response.json();
 
-    // Simulate server quotes format
+    // Simulate quote format from server
     const serverQuotes = serverData.slice(0, 5).map((post) => ({
       text: post.title,
       category: "server",
@@ -150,9 +152,11 @@ async function syncWithServer() {
       notifyUser(`${newQuotes.length} new quote(s) synced from server.`);
     }
   } catch (error) {
-    console.error("Sync failed:", error);
+    console.error("Error syncing with server:", error);
+    notifyUser("Failed to sync with server.");
   }
 }
+
 function notifyUser(message) {
   const notification = document.createElement("div");
   notification.textContent = message;
