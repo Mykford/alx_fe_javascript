@@ -156,6 +156,29 @@ async function fetchQuotesFromServer() {
     notifyUser("Failed to sync with server.");
   }
 }
+async function postQuoteToServer(quote) {
+  const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // Simulated endpoint
+
+  try {
+    const response = await fetch(SERVER_URL, {
+      method: "POST", // ✅ required
+      headers: {
+        "Content-Type": "application/json", // ✅ required
+      },
+      body: JSON.stringify(quote), // ✅ sending JSON
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log("Quote posted to server:", result);
+    } else {
+      console.error("Failed to post quote:", response.status);
+    }
+  } catch (error) {
+    console.error("Error posting quote:", error);
+  }
+}
+
 
 function notifyUser(message) {
   const notification = document.createElement("div");
