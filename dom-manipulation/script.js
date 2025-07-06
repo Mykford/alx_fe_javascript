@@ -11,14 +11,14 @@ let quotes = [
 // Display a random quote
 function showRandomQuote() {
   if (quotes.length === 0) {
-    document.getElementById("quoteDisplay").innerText = "No quotes available.";
+    document.getElementById("quoteDisplay").innerHTML = "No quotes available.";
     return;
   }
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];
   document.getElementById(
     "quoteDisplay"
-  ).innerText = `"${quote.text}" — ${quote.category}`;
+  ).innerHTML = `"${quote.text}" — ${quote.category}`;
 }
 
 // Add a new quote from the form
