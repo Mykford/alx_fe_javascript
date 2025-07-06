@@ -178,6 +178,33 @@ async function postQuoteToServer(quote) {
     console.error("Error posting quote:", error);
   }
 }
+async function syncQuotes() {
+  const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+
+  try {
+    const response = await fetch(SERVER_URL);
+    const serverData = await response.json();
+
+    // Simulate server quote format
+    const serverQuotes = serverData.slice(0, 5).map((post) => ({
+      text: post.title,
+      category: "server",
+    }));
+
+    const localTexts = new Set(quotes.map((q) => q.text));
+    const newQuotes = serverQuotes.filter((q) => !localTexts.has(q.text));
+
+    if (newQuotes.length > 0) {
+      quotes.push(...newQuotes);
+      saveQuotes();
+      populateCategories();
+      notifyUser(`${newQuotes.length} new quote(s) synced from server.`);
+    }
+  } catch (error) {
+    console.error("Sync failed:", error);
+    notifyUser("Failed to sync with server.");
+  }
+}
 
 
 function notifyUser(message) {
@@ -193,7 +220,9 @@ function notifyUser(message) {
     document.getElementById("quoteDisplay")
   );
 }
+
 setInterval(syncWithServer, 30000); // Sync every 30 seconds
+setInterval(syncQuotes, 30000); // Sync every 30 seconds
 
 
 createAddQuoteForm();
