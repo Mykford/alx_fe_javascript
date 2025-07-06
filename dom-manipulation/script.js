@@ -129,6 +129,45 @@ document.getElementById("newQuote").addEventListener("click", () => {
     selected === "all" ? quotes : quotes.filter((q) => q.category === selected);
   showRandomQuote(filtered);
 });
+async function syncWithServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const serverData = await response.json();
+
+    // Simulate server quotes format
+    const serverQuotes = serverData.slice(0, 5).map((post) => ({
+      text: post.title,
+      category: "server",
+    }));
+
+    const localTexts = new Set(quotes.map((q) => q.text));
+    const newQuotes = serverQuotes.filter((q) => !localTexts.has(q.text));
+
+    if (newQuotes.length > 0) {
+      quotes.push(...newQuotes);
+      saveQuotes();
+      populateCategories();
+      notifyUser(`${newQuotes.length} new quote(s) synced from server.`);
+    }
+  } catch (error) {
+    console.error("Sync failed:", error);
+  }
+}
+function notifyUser(message) {
+  const notification = document.createElement("div");
+  notification.textContent = message;
+  notification.style.background = "#fffae6";
+  notification.style.border = "1px solid #ccc";
+  notification.style.padding = "10px";
+  notification.style.marginTop = "10px";
+  notification.style.fontWeight = "bold";
+  document.body.insertBefore(
+    notification,
+    document.getElementById("quoteDisplay")
+  );
+}
+setInterval(syncWithServer, 30000); // Sync every 30 seconds
+
 
 createAddQuoteForm();
 populateCategories();
