@@ -81,19 +81,24 @@ function populateCategories() {
   const selected = localStorage.getItem("selectedCategory") || "all";
 
   // Clear existing options
-  filter.innerHTML = `<option value="all">All Categories</option>`;
+  filter.innerHTML = "";
 
-  // Get unique categories using map and Set
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "all";
+  defaultOption.textContent = "All Categories"; // ✅ using textContent
+  filter.appendChild(defaultOption);
+
   const categories = [...new Set(quotes.map((q) => q.category))];
 
   categories.forEach((cat) => {
     const option = document.createElement("option");
     option.value = cat;
-    option.text = cat;
+    option.textContent = cat; // ✅ using textContent
     if (cat === selected) option.selected = true;
     filter.appendChild(option);
   });
 }
+
 
 // Filter quotes by selected category
 function filterQuotes() {
