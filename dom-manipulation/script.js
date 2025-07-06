@@ -185,7 +185,6 @@ async function syncQuotes() {
     const response = await fetch(SERVER_URL);
     const serverData = await response.json();
 
-    // Simulate server quote format
     const serverQuotes = serverData.slice(0, 5).map((post) => ({
       text: post.title,
       category: "server",
@@ -200,6 +199,9 @@ async function syncQuotes() {
       populateCategories();
       notifyUser(`${newQuotes.length} new quote(s) synced from server.`);
     }
+
+    // ✅ Required message
+    console.log("Quotes synced with server!");
   } catch (error) {
     console.error("Sync failed:", error);
     notifyUser("Failed to sync with server.");
